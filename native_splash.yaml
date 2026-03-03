@@ -1,0 +1,10 @@
+flutter_native_splash:
+  android: true
+  web: false
+
+
+  background_image: "assets/background.jpg"
+
+  android_12:
+    color: "#d4e4ed"
+
