@@ -24,6 +24,7 @@ class SignupViewModel
     required String genderType,
     required String rooleType,
     required DateTime selectedDate,
+    required DateTime birthdate,
   }) async
   {
     try {
@@ -47,6 +48,7 @@ class SignupViewModel
             "genderType": genderType,
             "rooleType": rooleType,
             "selectedDate": selectedDate,
+            "birthdate" : Timestamp.fromDate(birthdate),
 
 
             "createdAt": Timestamp.now(),
@@ -155,7 +157,7 @@ class SignupViewModel
           await doc.set({
             "name": user.displayName,
             "email": user.email,
-            "rooleType": "patient", // default
+            // default
             "createdAt": Timestamp.now(),
           });
         }
@@ -167,6 +169,21 @@ class SignupViewModel
       print("Google Sign-in error: $e");
       return null;
     }
+  }
+  Future<void> completeGoogleProfile(
+      {
+    required String uid,
+    required String gender,
+    required String role,
+    required DateTime birthDate,
+    required String phone,
+  }) async {
+    await _firestore.collection("User").doc(uid).update({
+      "genderType": gender,
+      "rooleType": role,
+      "birthDate": birthDate,
+      "phone": phone,
+    });
   }
 
   Future<void> signOut() async

@@ -31,7 +31,8 @@ class drschedule
 
     List<Map<String, dynamic>> appointmentsList = [];
 
-    for (var doc in snapshot.docs) {
+    for (var doc in snapshot.docs)
+    {
       final appointment = doc.data();
 
       final patientDoc = await FirebaseFirestore.instance
@@ -46,6 +47,7 @@ class drschedule
 
       appointmentsList.add({
         "patientName": patientDoc["name"],
+        "patientId" :  patientDoc.id,
         "day": slotDoc["day"],
         "startTime": slotDoc["startTime"],
         "endTime": slotDoc["endTime"],
@@ -55,5 +57,8 @@ class drschedule
 
     return appointmentsList;
   }
+
+
+
 
 }

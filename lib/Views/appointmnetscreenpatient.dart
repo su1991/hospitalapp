@@ -75,6 +75,7 @@ class _AppointmentsState extends State<Appointments>
   List <Map <String,dynamic>> slots=[];
 
 
+
    Future<void> loadDoctors() async
    {
      final result = await _viewModel.fetchDoctors();
@@ -85,6 +86,8 @@ class _AppointmentsState extends State<Appointments>
        loading = false;
      });
    }
+
+
 
    Future<void> saveappointments() async
    {
@@ -124,6 +127,7 @@ class _AppointmentsState extends State<Appointments>
    String? day;
    String? endTime;
    String? startTime;
+   String? selectedCancelSlotId;
 
    bool loading = false;
 
@@ -132,6 +136,7 @@ class _AppointmentsState extends State<Appointments>
   {
     super.initState();
     loadDoctors();
+
   }
   @override
   Widget build(BuildContext context)
@@ -154,7 +159,7 @@ class _AppointmentsState extends State<Appointments>
         (
         padding: const EdgeInsets.all(16),
 
-        child: Column
+         child: SingleChildScrollView ( child :Column
           (
           crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -226,14 +231,17 @@ class _AppointmentsState extends State<Appointments>
           { final bool isbooked= slot["isBooked"]== true;
 
             return DropdownMenuItem<String>(
-              value: isbooked ? null : slot["id"], // disable selection
+              value: slot["id"] , // disable selection
               enabled: !isbooked,                  // prevents tapping
 
               child: Text(
                   "${slot["day"]} | ${slot["startTime"]}:00 - ${slot["endTime"]}:00"
+                      "${isbooked ? " (Booked)" : ""}",
+                style: TextStyle(
+                  color: isbooked ? Colors.grey : Colors.black,
               ),
 
-            );
+            ));
           }).toList(),
 
           onChanged: (value)
@@ -298,9 +306,89 @@ class _AppointmentsState extends State<Appointments>
 
               ),
             ),
-          ],
+
+            SizedBox(height: 40,),
+          StreamBuilder<List<Map<String, dynamic>>>
+            (
+              stream: _viewModel.fetchSavedAppointments(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator();
+                }
+
+                final savedslots = snapshot.data!;
+
+
+                return DropdownButtonFormField<String>
+                  (
+                  value: selectedCancelSlotId,
+                  hint: const Text("Cancel a slot"),
+                  items: savedslots.map((slot) {
+                    return DropdownMenuItem<String>(
+                      value: slot["appointmentId"],
+                      child: Text(
+                          "${slot["day"]} | ${slot["startTime"]}:00 - ${slot["endTime"]}:00 ${slot["doctorName"]}" ),
+                    );
+                  }).toList(),
+                  onChanged: (value) async {
+                    if (value != null) {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (context) =>
+                            AlertDialog(
+                              title: const Text("Confirm Cancellation"),
+                              content: const Text(
+                                  "Are you sure you want to cancel this appointment?"),
+                              actions: [
+                                TextButton(onPressed: () =>
+                                    Navigator.pop(context, false),
+                                    child: const Text("No")),
+                                TextButton(onPressed: () =>
+                                    Navigator.pop(context, true),
+                                    child: const Text("Yes")),
+                              ],
+                            ),
+                      );
+
+                      if (confirm == true) {
+                        setState(() {
+                          selectedCancelSlotId = value;
+                        });
+
+                        try {
+                          await _viewModel.cancelAppointment(value);
+
+                          setState(() {
+                            savedslots.removeWhere((slot) =>
+                            slot["appointmentId"] == value);
+                            selectedCancelSlotId = null;
+                          });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text(
+                                "Appointment canceled successfully")),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(
+                                "Failed to cancel appointment: $e")),
+                          );
+                        }
+                      }
+                    }
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                );
+              })],
         ),
       ),
-    );
+    ) );
   }
 }

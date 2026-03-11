@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gfhfg/ViewModel/drscheduleviewmodel.dart';
+import 'package:gfhfg/Views/chatpage.dart';
 import 'dart:math' as math;
 import 'loginview.dart';
-import 'navaigaitonbar.dart';
+
 
 
 class Schedule extends StatefulWidget
@@ -54,7 +55,10 @@ class Schedule extends StatefulWidget
       });
 
     }
+void openchat()
+{
 
+}
 
 
     late Color cardColor;
@@ -70,32 +74,32 @@ class Schedule extends StatefulWidget
     // generate once
   }
     int _selectedindex=0;
+
+  VoidCallback? get onPressed => openchat;
   @override
   Widget build(BuildContext context)
   {
 
     return
          Scaffold(
-           appBar: AppBar
-             (
 
-             title: const Text(""),
-             centerTitle: true,
-           ),
 
             body:  Padding(padding: const EdgeInsets.all(16),
             child: Column
               (
               children: [
             Expanded( child :
-            ListView.builder(
+            ListView.builder
+              (
             itemCount: doctorAppointments.length,
-                itemBuilder: (context, index) {
+                itemBuilder: (context, index)
+                {
                   final appointment = doctorAppointments[index];
 
 
                   // Welcome Card
-                  return Card( color: getColor(),
+                  return Card(
+                    color: getColor(),
                     child: ListTile(
                       title: Text(appointment["patientName"]),
                       subtitle: Text(
@@ -103,8 +107,25 @@ class Schedule extends StatefulWidget
                             "${appointment["startTime"]}:00 - "
                             "${appointment["endTime"]}:00",
                       ),
+
+                      trailing: ElevatedButton.icon(
+                        onPressed: ()
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute
+                              (
+                              builder: (context) => ViewChatPage(
+                                otherUserId: appointment["patientId"], // ✅ Now works
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.chat),
+                        label: const Text("Chat"),
+                      ),
                     ),
-                  );
+                  );;
                 },
             )
             )] ,

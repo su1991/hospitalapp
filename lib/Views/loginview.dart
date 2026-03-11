@@ -47,7 +47,8 @@ class _loginState extends State<login>
 
     // If success
 
-    if (result == "doctor") {
+    if (result == "doctor")
+    {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

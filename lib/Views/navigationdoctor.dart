@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gfhfg/Views/Doctordashboard.dart';
+import 'package:gfhfg/Views/Drprofile.dart';
 import 'package:gfhfg/Views/loginview.dart';
 import 'package:gfhfg/Views/patientstab.dart';
 import '../ViewModel/login.dart';
 import 'patientmainscreen.dart';
 import 'schedulepateint.dart';// Import your separate files
 // import 'schedule_page.dart';
+
 
 class navigationdr extends StatefulWidget
 { final VoidCallback onToggleTheme;
@@ -58,9 +60,8 @@ class _navigationbar extends State<navigationdr>
     Schedule(),
 
     patients(),
-    const Center(child: Text("chat")),
     const Center(child: Text("Notification")),
-    const Center(child: Text("profile")),
+    drprofile()
   ];
 
   VoidCallback? get handleslogut => handleLogout;
@@ -74,12 +75,12 @@ class _navigationbar extends State<navigationdr>
 
       appBar: AppBar
         (
-        title: const Text("Dcotor Portal"),
+        title: const Text("Doctor Portal"),
 
-        elevation: 0,
+
         actions: [
           ElevatedButton.icon(onPressed: handleslogut, icon: Icon(Icons.logout), label: Text("logout"), style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFA1C5CB))
+          )
           ), IconButton(
             icon: Icon(Icons.dark_mode),
             onPressed: widget.onToggleTheme,
@@ -105,7 +106,6 @@ class _navigationbar extends State<navigationdr>
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.calendar_month), label: 'Schedule'),
           NavigationDestination(icon: Icon(Icons.people), label: 'patients'),
-          NavigationDestination(icon: Icon(Icons.chat), label: 'chat'),
           NavigationDestination(icon: Icon(Icons.notifications), label: 'notification'),
           NavigationDestination(icon: Icon(Icons.person), label: 'profile'),
         ],

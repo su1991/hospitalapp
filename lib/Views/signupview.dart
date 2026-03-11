@@ -1,8 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:gfhfg/ViewModel/Signup.dart';
+import 'package:gfhfg/Views/googleviews.dart';
+import 'package:sign_in_button/sign_in_button.dart';
+
 
 import 'loginview.dart';
+import 'navaigaitonbar.dart';
+import 'navigationdoctor.dart';
 class signup extends StatefulWidget
 { final VoidCallback onToggleTheme;
   const signup({super.key, required this.onToggleTheme,});
@@ -77,7 +84,9 @@ final nameController=TextEditingController();
   final passwordController=TextEditingController();
   final phonenumberController=TextEditingController();
 
+
   VoidCallback? get onPressed => handlesignup;
+  dynamic get onPressed1 =>googlesignup;
   DateTime? selectedDate;
   bool loading=false;
   final SignupViewModel _viewModel = SignupViewModel();
@@ -118,7 +127,7 @@ final nameController=TextEditingController();
       loading=true;
     });
     String? result = await _viewModel.signup
-      (
+      (birthdate: selectedDate! ,
       name: nameController.text.trim(),
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
@@ -153,6 +162,52 @@ final nameController=TextEditingController();
     }
 
   }
+
+void googlesignup() async {
+  User? user = await _viewModel.signInWithGoogle();
+
+  if (user == null) return;
+
+  final doc = await FirebaseFirestore.instance
+      .collection("User")
+      .doc(user.uid)
+      .get();
+
+  // If role does NOT exist → go to googleviews
+  if (!doc.data()!.containsKey("rooleType"))
+  {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            googleviews(onToggleTheme: widget.onToggleTheme),
+      ),
+    );
+  }
+  else {
+    String role = doc["rooleType"];
+
+    if (role == "patient") {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              navigation(onToggleTheme: widget.onToggleTheme),
+        ),
+            (route) => false,
+      );
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              navigationdr(onToggleTheme: widget.onToggleTheme),
+        ),
+            (route) => false,
+      );
+    }
+  }
+}
 
 
   @override
@@ -270,6 +325,9 @@ Text('Choose Gender please',style: TextStyle(fontSize: 20,fontWeight: FontWeight
 SizedBox(width: double.infinity, child:
      ElevatedButton(onPressed: onPressed, child: const Text('signup'), style: ElevatedButton.styleFrom( backgroundColor: Colors.blue)),
 ),SizedBox(width: 20)
+        
+        , 
+  SignInButton(Buttons.google, onPressed: onPressed1)
   ,    ElevatedButton(onPressed: () {
 
     Navigator.push(

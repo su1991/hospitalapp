@@ -47,18 +47,20 @@ class _MyAppState extends State<MyApp>
       debugShowCheckedModeBanner: false,
         theme: ThemeData
           (
-          colorScheme: ColorScheme.fromSeed(
+          colorScheme: ColorScheme.fromSeed
+            (
             seedColor: const Color(0xFFA1C5CB),
             brightness: Brightness.light,
           ),
           scaffoldBackgroundColor: const Color(0xFFA1C5CB),
 
           appBarTheme: const AppBarTheme
-            (
-            backgroundColor: Color(0xFFA1C5CB),
+            ( shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all( Radius.circular(30))),
+
+            backgroundColor: Color(0xFF7DA2A8),
           ),navigationBarTheme: const NavigationBarThemeData
-          (
-            backgroundColor: const Color(0xFFA1C5CB),
+          ( shadowColor: Colors.red,
+            backgroundColor: const Color(0xFF7DA2A8),
           ),
           useMaterial3: true,
         ),
@@ -77,7 +79,10 @@ class _MyAppState extends State<MyApp>
             (
             backgroundColor: Colors.black,
 
-            ),navigationBarTheme: const NavigationBarThemeData
+            )
+
+
+          ,navigationBarTheme: const NavigationBarThemeData
           (
           backgroundColor: Colors.black,
 

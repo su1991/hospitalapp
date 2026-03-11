@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gfhfg/Views/chatpage.dart';
 import '../ViewModel/appointmentViewModel.dart';
+import '../ViewModel/drscheduleviewmodel.dart';
 import 'appointmnetscreenpatient.dart';
 import 'schedulepateint.dart';
 import 'navaigaitonbar.dart';
+import 'package:gfhfg/Views/chatpage.dart';
 
 class HomePage extends StatefulWidget
 {
@@ -25,8 +28,12 @@ class HomePage extends StatefulWidget
    Map<String, dynamic>? nextAppointment;
    bool loading = true;
    var patientname;
+   List<Map<String, dynamic>> doctorAppointments = [];
+   final drschedule _viewModel1 = drschedule();
 
    final appointmentViewModel _viewModel = appointmentViewModel();
+
+
 
 
 
@@ -84,10 +91,15 @@ class HomePage extends StatefulWidget
                 StreamBuilder<Map<String, dynamic>?>
                   (
                   stream: _viewModel.loadNextAppointment(),
-                  builder: (context, snapshot) {
+                  builder: (context, snapshot)
+                  {
+                    final appointment = snapshot.data;
+                    print(snapshot.data);
+
                     return Card(
                       elevation: 2,
-                      shape: RoundedRectangleBorder(
+                      shape: RoundedRectangleBorder
+                        (
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: ListTile(
@@ -103,11 +115,27 @@ class HomePage extends StatefulWidget
                               "${snapshot.data!["startTime"]}:00 - "
                               "${snapshot.data!["endTime"]}:00",
                         ),
+
+                        trailing: ElevatedButton.icon(
+                          onPressed: appointment != null
+                              ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewChatPage(
+                                  otherUserId: appointment["doctorId"],
+                                ),
+                              ),
+                            );
+                          }
+                              : null, // disables button if no appointment
+                          icon: const Icon(Icons.chat),
+                          label: const Text("Chat"),
+                        ),
                       ),
                     );
                   },
                 ),
-
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-class appointmentViewModel {
+class appointmentViewModel
+{
   Future<List<Map<String, dynamic>>> fetchDoctors() async
   {
     try {
@@ -28,7 +29,8 @@ class appointmentViewModel {
   }
 
 
-  Future<List<Map<String, dynamic>>> fetchDoctorSlots({
+  Future<List<Map<String, dynamic>>> fetchDoctorSlots(
+      {
     required String doctorId,
   }) async {
     final firestore = FirebaseFirestore.instance;
@@ -64,7 +66,8 @@ class appointmentViewModel {
     }).toList();
   }
 
-  Future<void> saveAppointments({
+  Future<void> saveAppointments(
+      {
     required String doctorId,
     required String patientId,
     required String slotId,
@@ -128,6 +131,7 @@ class appointmentViewModel {
         "day": slotDoc.data()?["day"] ?? "",
         "startTime": slotDoc.data()?["startTime"] ?? "",
         "endTime": slotDoc.data()?["endTime"] ?? "",
+        "doctorId": doctorDoc.id
       };
     });
   }
@@ -153,6 +157,81 @@ class appointmentViewModel {
     }
   }
 
+  Future<String?> fetchoppositeName(String userId) async
+  {
+    try
+    {
+
+
+      final doc = await FirebaseFirestore.instance
+          .collection("User")
+          .doc(userId)
+          .get();
+
+      if (!doc.exists) return null;
+
+      return doc["name"];
+    } catch (e)
+    {
+      print("Error fetching name: $e");
+      return null;
+    }
+  }
+
+
+  Stream<List<Map<String, dynamic>>> fetchSavedAppointments()
+  {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    return FirebaseFirestore.instance
+        .collection("appointments")
+        .where("patientId", isEqualTo: userId)
+        .snapshots()
+        .asyncMap((snapshot) async {
+
+      List<Map<String, dynamic>> appointments = [];
+
+      for (var doc in snapshot.docs) {
+
+        final appointmentData = doc.data();
+        final appointmentId = doc.id;
+
+        final doctorId = appointmentData["doctorId"];
+        final slotId = appointmentData["slotId"];
+
+        final doctorDoc = await FirebaseFirestore.instance
+            .collection("User")
+            .doc(doctorId)
+            .get();
+
+        final slotDoc = await FirebaseFirestore.instance
+            .collection("slots")
+            .doc(slotId)
+            .get();
+
+        appointments.add({
+          "appointmentId": appointmentId,
+          "doctorName": doctorDoc.data()?["name"] ?? "Unknown",
+          "day": slotDoc.data()?["day"] ?? "",
+          "startTime": slotDoc.data()?["startTime"] ?? "",
+          "endTime": slotDoc.data()?["endTime"] ?? "",
+          "doctorId": doctorId,
+          "slotId": slotId,
+        });
+      }
+
+      return appointments;
+    });
+  }
+
+
+  Future<void> cancelAppointment(String appointmentId) async
+  {
+    await FirebaseFirestore.instance
+        .collection("appointments")
+        .doc(appointmentId)
+        .delete();
+  }
 
 
 }

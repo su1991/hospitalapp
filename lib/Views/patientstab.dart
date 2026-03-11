@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'loginview.dart';
-import 'navaigaitonbar.dart';
+
 
 class patients extends StatefulWidget
 {
@@ -43,12 +43,8 @@ Widget build(BuildContext context)
 
   return
     Scaffold(
-      appBar: AppBar(
-        backgroundColor:const Color(0xFFA1C5CB) ,
-        title: const Text(""),
-        centerTitle: true,
-      ),
-      backgroundColor: const Color(0xFFA1C5CB),
+
+
       body: SingleChildScrollView(child: Center( child: Padding(padding: const EdgeInsets.all(16),
 
         child: Column(
