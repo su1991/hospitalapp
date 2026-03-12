@@ -102,6 +102,9 @@ class _signupState extends State<googleviews>
         birthDate: selectedDate!,
         phone: phonenumberController.text.trim(),
         specialziation: specialziationController.text.trim(),
+        Hospital: HospitalController.text.trim(),
+        address : AddressController.text.trim(),
+
 
       );
     }
@@ -136,6 +139,8 @@ class _signupState extends State<googleviews>
 
   final phonenumberController=TextEditingController();
   final specialziationController=TextEditingController();
+  final HospitalController = TextEditingController();
+  final AddressController = TextEditingController();
 
 
   DateTime? selectedDate;
@@ -236,6 +241,10 @@ class _signupState extends State<googleviews>
                 if(rooleType == roleType.doctor)
                   TextField(decoration: _input("Enter specialization"),
                       controller: specialziationController),
+                    if(rooleType == roleType.doctor)
+                    TextField(decoration: _input("Enter Hospital"), controller: HospitalController,),
+                    if(rooleType == roleType.doctor)
+                    TextField(decoration: _input("Enter Address"),controller: AddressController,),
 
 
                     Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),

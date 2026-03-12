@@ -84,6 +84,8 @@ final nameController=TextEditingController();
   final passwordController=TextEditingController();
   final phonenumberController=TextEditingController();
   final specializationController=TextEditingController();
+  final HospitalController = TextEditingController();
+  final AddressController = TextEditingController();
 
 
   VoidCallback? get onPressed => handlesignup;
@@ -134,6 +136,8 @@ final nameController=TextEditingController();
       password: passwordController.text.trim(),
       phonenumber: phonenumberController.text.trim(),
       specialization: specializationController.text.trim(),
+      Hospital: HospitalController.text.trim(),
+      address : AddressController.text.trim(),
       genderType: genderType!.name,
       rooleType: rooleType!.name,
       selectedDate: selectedDate!,
@@ -304,13 +308,13 @@ Text('Choose Gender please',style: TextStyle(fontSize: 20,fontWeight: FontWeight
             SizedBox.fromSize(size: const Size(50, 20)),
 
           if(rooleType == roleType.doctor)
+                   TextField(decoration: _input("Enter specialization"), controller: specializationController),
+          if(rooleType == roleType.doctor)
+                   TextField(decoration: _input("Enter Hospital"), controller: HospitalController,),
+          if(rooleType == roleType.doctor)
+                   TextField(decoration: _input("Enter Address"),controller: AddressController,),
 
-
-              TextField(decoration: _input("Enter specialization"),
-                  controller: specializationController),
-
-
-            Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+          Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
             DatePickerExample
               (
               selectedDate: selectedDate,
