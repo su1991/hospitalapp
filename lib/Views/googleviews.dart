@@ -101,6 +101,8 @@ class _signupState extends State<googleviews>
         role: rooleType!.name,
         birthDate: selectedDate!,
         phone: phonenumberController.text.trim(),
+        specialziation: specialziationController.text.trim(),
+
       );
     }
 
@@ -133,6 +135,7 @@ class _signupState extends State<googleviews>
   roleType? rooleType;
 
   final phonenumberController=TextEditingController();
+  final specialziationController=TextEditingController();
 
 
   DateTime? selectedDate;
@@ -230,7 +233,9 @@ class _signupState extends State<googleviews>
 
                     SizedBox.fromSize(size: const Size(50, 20)),
 
-
+                if(rooleType == roleType.doctor)
+                  TextField(decoration: _input("Enter specialization"),
+                      controller: specialziationController),
 
 
                     Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),

@@ -83,6 +83,7 @@ final nameController=TextEditingController();
   final emailController=TextEditingController();
   final passwordController=TextEditingController();
   final phonenumberController=TextEditingController();
+  final specializationController=TextEditingController();
 
 
   VoidCallback? get onPressed => handlesignup;
@@ -132,6 +133,7 @@ final nameController=TextEditingController();
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
       phonenumber: phonenumberController.text.trim(),
+      specialization: specializationController.text.trim(),
       genderType: genderType!.name,
       rooleType: rooleType!.name,
       selectedDate: selectedDate!,
@@ -163,7 +165,8 @@ final nameController=TextEditingController();
 
   }
 
-void googlesignup() async {
+void googlesignup() async
+{
   User? user = await _viewModel.signInWithGoogle();
 
   if (user == null) return;
@@ -237,17 +240,16 @@ void googlesignup() async {
       mainAxisAlignment: MainAxisAlignment.center,
       children:
       [ TextField(decoration: _input("Enter full name"), controller: nameController),
-        SizedBox(height:40),
+        SizedBox(height:10),
       TextField(decoration: _input("Enter email"),controller: emailController,),
-         SizedBox(height:40),
+         SizedBox(height:10),
         TextField(decoration: _input("password"),controller: passwordController,)
-        ,SizedBox(height:40),
+        ,SizedBox(height:10),
         TextField(decoration: _input("Enter phone number"),controller: phonenumberController,),
-        SizedBox.fromSize(size: const Size(50, 20)),
+        SizedBox.fromSize(size: const Size(10, 20)),
         Column
-         ( 
-          children: <Widget>
-       [
+         (children: <Widget>
+        [
 Text('Choose Gender please',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
 
       ListTile
@@ -299,10 +301,13 @@ Text('Choose Gender please',style: TextStyle(fontSize: 20,fontWeight: FontWeight
                 });
               },),
             ),
-
             SizedBox.fromSize(size: const Size(50, 20)),
 
+          if(rooleType == roleType.doctor)
 
+
+              TextField(decoration: _input("Enter specialization"),
+                  controller: specializationController),
 
 
             Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
@@ -346,7 +351,10 @@ SizedBox(width: double.infinity, child:
 
 
 
-  ));}
+  ));
+
+
+  }
 
 
 

@@ -23,8 +23,9 @@ class SignupViewModel
     required String phonenumber,
     required String genderType,
     required String rooleType,
+
     required DateTime selectedDate,
-    required DateTime birthdate,
+    required DateTime birthdate,  String  ? specialization,
   }) async
   {
     try {
@@ -43,15 +44,15 @@ class SignupViewModel
           {
             "name": name,
             "email": email,
-
             "phonenumber": phonenumber,
             "genderType": genderType,
             "rooleType": rooleType,
             "selectedDate": selectedDate,
             "birthdate" : Timestamp.fromDate(birthdate),
-
-
             "createdAt": Timestamp.now(),
+            if(specialization!=null)
+               "specialization" : specialization
+
           }
       );
 
@@ -177,12 +178,15 @@ class SignupViewModel
     required String role,
     required DateTime birthDate,
     required String phone,
+        String ? specialziation
   }) async {
     await _firestore.collection("User").doc(uid).update({
       "genderType": gender,
       "rooleType": role,
       "birthDate": birthDate,
       "phone": phone,
+      if(specialziation!=null)
+        "specialziation": specialziation
     });
   }
 
