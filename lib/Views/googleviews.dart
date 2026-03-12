@@ -101,7 +101,7 @@ class _signupState extends State<googleviews>
         role: rooleType!.name,
         birthDate: selectedDate!,
         phone: phonenumberController.text.trim(),
-        specialziation: specialziationController.text.trim(),
+        specialization: specialziationController.text.trim(),
         Hospital: HospitalController.text.trim(),
         address : AddressController.text.trim(),
 

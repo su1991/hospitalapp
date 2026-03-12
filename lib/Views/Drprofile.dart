@@ -181,7 +181,11 @@ if (data.isNotEmpty)
 
                 Row(children: [Text("Birth Date :"),Text("${birthdate.day}/${birthdate.month}/${birthdate.year}")],),
                 SizedBox(height: 20),
-                Row (children: [Text ("specialziation :"),Text(doctorData?["specialization"] ?? "Loading..."), Text("  ")])
+                Row (children: [Text ("specialization :"),Text(doctorData?["specialization"] ?? "Loading..."), Text("  ")]),
+                SizedBox(height: 20),
+                Row (children: [Text ("Hospital :"),Text(doctorData?["Hospital"] ?? "Loading..."), Text("  ")]),
+                SizedBox(height: 20),
+                Row (children: [Text ("address :"),Text(doctorData?["address"] ?? "Loading..."), Text("  ")])
 
 
               ],

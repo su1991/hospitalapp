@@ -129,6 +129,7 @@ class _AppointmentsState extends State<Appointments>
    String? startTime;
    String? selectedCancelSlotId;
 
+
    bool loading = false;
 
   @override
@@ -178,39 +179,49 @@ class _AppointmentsState extends State<Appointments>
             const SizedBox(height: 10),
 
             // 🔹 Dropdown
-            DropdownButtonFormField<String>
-              (
-
+            DropdownButtonFormField<String>(
               value: selectedDoctorId,
-
               hint: const Text("Choose a doctor"),
 
               items: doctors.map((doctor)
               {
-                return DropdownMenuItem<String>
-                  (
+
+                final bool isCurrentDoctor =
+                    doctor["id"] == FirebaseAuth.instance.currentUser!.uid;
+
+                return DropdownMenuItem<String>(
+
                   value: doctor["id"],
-                  child: Text(doctor["name"]),
+                  enabled: !isCurrentDoctor,
+
+                  child: Text(
+                    doctor["name"],
+                    style: TextStyle(
+                      color: isCurrentDoctor ? Colors.grey : Colors.black,
+                    ),
+                  ),
                 );
+
               }).toList(),
 
-              onChanged: (value)
-              async {
-                setState(()
-                {
+              onChanged: (value) async {
+
+                if (value == null) return;
+
+                setState(() {
                   selectedDoctorId = value;
-                  selectedSlotId=null;
+                  selectedSlotId = null;
                   loading = true;
                 });
-                await loadslots(value!);
+
+                await loadslots(value);
+
               },
 
-              decoration: InputDecoration
-                (
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                border: OutlineInputBorder
-                  (
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
