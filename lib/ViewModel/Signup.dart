@@ -51,11 +51,11 @@ class SignupViewModel
             "birthdate" : Timestamp.fromDate(birthdate),
             "createdAt": Timestamp.now(),
             if(specialization!=null)
-               "specialization" : specialization,
-            if(specialization!=null)
-               "Hospital" : Hospital,
-            if(specialization!=null)
-               "address" : address
+              "specialization": specialization ?? "",
+            if(Hospital!=null)
+              "Hospital": Hospital ?? "",
+            if(address!=null)
+              "address": address ?? "",
 
           }
       );
@@ -107,6 +107,25 @@ class SignupViewModel
       return "Please enter a valid email";
     }
 
+
+    return null;
+  }
+
+  String? validateGoogleMapsLink(String? link)
+  {
+    if (link == null || link.isEmpty)
+    {
+      return "Google Maps link is required";
+    }
+
+    // Simple pattern check for Google Maps URLs
+    bool isValid = RegExp(
+        r'^(https:\/\/(www\.google\.com\/maps|maps\.app\.goo\.gl)\/.+)$'
+    ).hasMatch(link);
+
+    if (!isValid) {
+      return "Please enter a valid Google Maps link";
+    }
 
     return null;
   }
@@ -213,16 +232,42 @@ class SignupViewModel
     await _firestore.collection("User").doc(uid).update({
       "genderType": gender,
       "rooleType": role,
-      "birthDate": birthDate,
+      "birthdate" : Timestamp.fromDate(birthDate),
       "phone": phone,
       if(specialization!=null)
-        "specialziation": specialization,
-      if(specialization!=null)
-         "Hospital" : Hospital,
-      if(specialization!=null)
-         "Hospital address" : address
+        "specialization": specialization ?? "",
+      if(Hospital!=null)
+        "Hospital": Hospital ?? "",
+      if(address!=null)
+        "Hospital address": address ?? "",
     });
+
+    final specQuery = await _firestore
+        .collection("specializations")
+        .where("name", isEqualTo: specialization)
+        .get();
+
+    if (specQuery.docs.isEmpty)
+
+    {
+      await _firestore.collection("specializations").add({
+        "name": specialization
+      });
+    }
+
+    final hospitalQuery = await _firestore
+        .collection("hospitals")
+        .where("name", isEqualTo: Hospital)
+        .get();
+
+    if (hospitalQuery.docs.isEmpty)
+    {
+      await _firestore.collection("hospitals").add({
+        "name": Hospital
+      });
+    }
   }
+
 
   Future<void> signOut() async
   {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:gfhfg/ViewModel/Signup.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 import 'loginview.dart';
@@ -85,6 +86,18 @@ class _signupState extends State<googleviews>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please complete all fields")),
       );
+
+
+      String? addresserror= _viewModel.validateGoogleMapsLink(AddressController.text);
+      if(addresserror != null)
+      {
+        ScaffoldMessenger.of(context).showSnackBar
+          (
+
+          SnackBar(content:  Text(addresserror)),
+        );
+      }
+
       return;
     }
 
@@ -141,6 +154,8 @@ class _signupState extends State<googleviews>
   final specialziationController=TextEditingController();
   final HospitalController = TextEditingController();
   final AddressController = TextEditingController();
+
+
 
 
   DateTime? selectedDate;
@@ -244,7 +259,23 @@ class _signupState extends State<googleviews>
                     if(rooleType == roleType.doctor)
                     TextField(decoration: _input("Enter Hospital"), controller: HospitalController,),
                     if(rooleType == roleType.doctor)
-                    TextField(decoration: _input("Enter Address"),controller: AddressController,),
+                      Row( children: [ Expanded(child:
+                      TextField(decoration: _input("Enter Google map  Link address "),controller: AddressController,keyboardType: TextInputType.url),)
+                        , IconButton(
+                          icon: Icon(Icons.map),
+                          onPressed: () async {
+                            final url = AddressController.text.trim();
+                            if(await canLaunchUrl(Uri.parse(url))) {
+                              await launchUrl(Uri.parse(url));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Invalid Maps link")),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                      ),
 
 
                     Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),

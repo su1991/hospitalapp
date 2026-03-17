@@ -5,6 +5,7 @@ import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:gfhfg/ViewModel/Signup.dart';
 import 'package:gfhfg/Views/googleviews.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 import 'loginview.dart';
@@ -109,11 +110,22 @@ final nameController=TextEditingController();
   String? passworderror=_viewModel.validatepassword(passwordController.text);
   if (passworderror != null)
   {
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar
+      (
       SnackBar(content: Text(passworderror)),
     );
     return; // Stop signup
   }
+
+  String? addresserror= _viewModel.validateGoogleMapsLink(AddressController.text);
+  if(addresserror != null)
+    {
+      ScaffoldMessenger.of(context).showSnackBar
+        (
+
+        SnackBar(content:  Text(addresserror)),
+      );
+    }
 
   String? phoneerror=_viewModel.validatephone(phonenumberController.text);
   if (phoneerror != null)
@@ -312,7 +324,24 @@ Text('Choose Gender please',style: TextStyle(fontSize: 20,fontWeight: FontWeight
           if(rooleType == roleType.doctor)
                    TextField(decoration: _input("Enter Hospital"), controller: HospitalController,),
           if(rooleType == roleType.doctor)
-                   TextField(decoration: _input("Enter Address"),controller: AddressController,),
+             Row( children: [ Expanded(child:
+               TextField(decoration: _input("Enter Google map  Link address "),controller: AddressController,keyboardType: TextInputType.url),)
+  , IconButton(
+                 icon: Icon(Icons.map),
+                 onPressed: () async {
+                   final url = AddressController.text.trim();
+                   if(await canLaunchUrl(Uri.parse(url))) {
+                     await launchUrl(Uri.parse(url));
+                   } else {
+                     ScaffoldMessenger.of(context).showSnackBar(
+                       SnackBar(content: Text("Invalid Maps link")),
+                     );
+                   }
+                 },
+               ),
+             ],
+             ),
+
 
           Text("Pick birth of date",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
             DatePickerExample

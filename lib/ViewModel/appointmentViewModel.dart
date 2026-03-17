@@ -296,7 +296,8 @@ class appointmentViewModel
 
     final List<Map<String,dynamic>> result = [];
 
-    for (var doc in snapshot.docs) {
+    for (var doc in snapshot.docs)
+    {
       result.add({
         "specialization": doc["specialization"]
       });
