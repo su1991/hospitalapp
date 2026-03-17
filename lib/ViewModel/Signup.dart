@@ -60,6 +60,32 @@ class SignupViewModel
           }
       );
 
+      final specQuery = await _firestore
+          .collection("specializations")
+          .where("name", isEqualTo: specialization)
+          .get();
+
+      if (specQuery.docs.isEmpty)
+
+      {
+        await _firestore.collection("specializations").add({
+          "name": specialization
+        });
+      }
+
+      final hospitalQuery = await _firestore
+          .collection("hospitals")
+          .where("name", isEqualTo: Hospital)
+          .get();
+
+      if (hospitalQuery.docs.isEmpty)
+      {
+        await _firestore.collection("hospitals").add({
+          "name": Hospital
+        });
+      }
+
+
       // Success
       return null;
     }

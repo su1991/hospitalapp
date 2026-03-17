@@ -234,4 +234,99 @@ class appointmentViewModel
   }
 
 
+  Future<List<Map<String, dynamic>>> fetchSpecializations() async
+  {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("specializations")
+
+          .get();
+
+      final List<Map<String, dynamic>> loadedspecialization = [];
+
+      for (var doc in snapshot.docs) {
+        loadedspecialization.add({
+
+          "specialization": doc["name"],
+        });
+      }
+
+      return loadedspecialization;
+    } catch (e) {
+      print("Error fetching specialzaiton: $e");
+      return []; // ✅ REQUIRED
+    }
+  }
+
+
+
+  Future<List<Map<String, dynamic>>> fetchhospitals() async
+  {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("hospitals")
+
+          .get();
+
+      final List<Map<String, dynamic>> loadedhospital = [];
+
+      for (var doc in snapshot.docs) {
+        loadedhospital.add({
+
+          "hospital": doc["name"],
+        });
+      }
+
+      return loadedhospital;
+    } catch (e) {
+      print("Error fetching specialzaiton: $e");
+      return []; // ✅ REQUIRED
+    }
+  }
+
+
+  Future<List<Map<String,dynamic>>> fetchSpecializationsByHospital(String hospital) async
+  {
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection("User")
+        .where("rooleType", isEqualTo: "doctor")
+        .where("Hospital", isEqualTo: hospital)
+        .get();
+
+    final List<Map<String,dynamic>> result = [];
+
+    for (var doc in snapshot.docs) {
+      result.add({
+        "specialization": doc["specialization"]
+      });
+    }
+
+    return result;
+  }
+
+  Future<List<Map<String,dynamic>>> fetchDoctorsByFilter(
+      String hospital,
+      String specialization) async {
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection("User")
+        .where("rooleType", isEqualTo: "doctor")
+        .where("Hospital", isEqualTo: hospital)
+        .where("specialization", isEqualTo: specialization)
+        .get();
+
+    final List<Map<String,dynamic>> result = [];
+
+    for (var doc in snapshot.docs) {
+      result.add({
+        "id": doc.id,
+        "name": doc["name"]
+      });
+    }
+
+    return result;
+  }
+
+
 }

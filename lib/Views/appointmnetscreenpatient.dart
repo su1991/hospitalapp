@@ -73,12 +73,13 @@ class _AppointmentsState extends State<Appointments>
   // List to store doctors
   List<Map<String, dynamic>> doctors = [];
   List <Map <String,dynamic>> slots=[];
-
+   List<Map<String, dynamic>> special = [];
+   List<Map<String, dynamic>> hospital = [];
 
 
    Future<void> loadDoctors() async
    {
-     final result = await _viewModel.fetchDoctors();
+     final result = await _viewModel.fetchDoctorsByFilter(selectedHospitalId! , specialization!);
 
      setState(()
      {
@@ -86,7 +87,30 @@ class _AppointmentsState extends State<Appointments>
        loading = false;
      });
    }
+   
+   
+   Future<void> loadspecialization() async
+   {
+     final result = await _viewModel.fetchSpecializationsByHospital(selectedHospitalId!);
 
+     setState(()
+     {
+       special = result;
+       loading = false;
+     });
+     print(special);
+   }
+   Future<void> loadhospital() async
+   {
+     final result = await _viewModel.fetchhospitals();
+
+     setState(()
+     {
+       hospital = result;
+       loading = false;
+     });
+     print(hospital);
+   }
 
 
    Future<void> saveappointments() async
@@ -132,11 +156,20 @@ class _AppointmentsState extends State<Appointments>
 
    bool loading = false;
 
+  String?  selectedHospitalId;
+  String? selectedSpecializationId;
+
+  String? get specialization => selectedSpecializationId;
+
   @override
   void initState()
   {
     super.initState();
-    loadDoctors();
+
+    loadhospital();
+
+
+
 
   }
   @override
@@ -177,15 +210,122 @@ class _AppointmentsState extends State<Appointments>
             ),
 
             const SizedBox(height: 10),
+            DropdownButtonFormField<String>
+              (
+              value: selectedHospitalId,
+              hint: const Text("choose by Hospital"),
+
+              items: hospital.map((hospital)
+              {
+
+                print(hospital);
+
+                return DropdownMenuItem<String>
+                  (
+
+                  value: hospital["hospital"],
+
+
+                  child: Text
+                    (
+                    hospital["hospital"],
+                    style: TextStyle
+                      (
+                    ),
+                  ),
+                );
+
+              }).toList(),
+
+              onChanged: (value) async
+              {
+
+                if (value == null) return;
+
+                setState(() {
+                  selectedHospitalId = value;
+
+                  loading = true;
+                });
+      await loadspecialization();
+
+
+              },
+
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+
+            DropdownButtonFormField<String>
+              (
+              value: selectedSpecializationId,
+              hint: const Text("choose by specialization"),
+
+              items: special.map((specialization)
+              {
+
+
+
+                return DropdownMenuItem<String>
+                  (
+
+                  value: specialization["specialization"],
+                  child: Text
+                    (
+                    specialization["specialization"],
+                    style: TextStyle(
+
+                    ),
+                  ),
+                );
+
+              }).toList(),
+
+              onChanged: (value) async
+              {
+
+                if (value == null) return;
+
+                setState(()
+                {
+                  selectedSpecializationId = value;
+                  loading = true;
+                });
+
+                        await loadDoctors();
+
+              },
+
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+
+
+            const SizedBox(height: 10),
 
             // 🔹 Dropdown
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<String>
+              (
               value: selectedDoctorId,
               hint: const Text("Choose a doctor"),
 
               items: doctors.map((doctor)
               {
-
                 final bool isCurrentDoctor =
                     doctor["id"] == FirebaseAuth.instance.currentUser!.uid;
 
@@ -204,11 +344,13 @@ class _AppointmentsState extends State<Appointments>
 
               }).toList(),
 
-              onChanged: (value) async {
+              onChanged: (value) async
+              {
 
                 if (value == null) return;
 
-                setState(() {
+                setState(()
+                {
                   selectedDoctorId = value;
                   selectedSlotId = null;
                   loading = true;
@@ -218,7 +360,8 @@ class _AppointmentsState extends State<Appointments>
 
               },
 
-              decoration: InputDecoration(
+              decoration: InputDecoration
+                (
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
