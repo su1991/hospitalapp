@@ -244,6 +244,14 @@ class _AppointmentsState extends State<Appointments>
 
                 setState(() {
                   selectedHospitalId = value;
+                  selectedSpecializationId = null; // because when we select other hospital, all of the options in the subsequent
+                  //dropdowns are cleared
+                  selectedDoctorId = null;
+                  selectedSlotId = null;
+
+                  special = [];
+                  doctors = [];
+                  slots = [];
 
                   loading = true;
                 });

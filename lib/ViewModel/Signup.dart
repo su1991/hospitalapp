@@ -220,7 +220,8 @@ class SignupViewModel
       return null;
     }
   }
-  Future<void> completeGoogleProfile(
+  Future<void> completeGoogleProfile
+      (
       {
     required String uid,
     required String gender,
