@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gfhfg/Views/Doctordashboard.dart';
 import 'package:gfhfg/Views/Drprofile.dart';
@@ -11,6 +12,7 @@ import 'schedulepateint.dart';// Import your separate files
 
 class navigationdr extends StatefulWidget
 { final VoidCallback onToggleTheme;
+
   const navigationdr({super.key, required this.onToggleTheme});
 
   @override
@@ -44,6 +46,7 @@ class _navigationbar extends State<navigationdr>
     );
   }
   int _selectedIndex = 0;
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   // The pages that will be displayed in the body
   late final List<Widget> _pages =
@@ -61,7 +64,7 @@ class _navigationbar extends State<navigationdr>
 
   HomePage(onSchedulePressed: () {  },),
     const Center(child: Text("Notification")),
-    drprofile()
+    drprofile(doctorId: currentUserId,)
   ];
 
   VoidCallback? get handleslogut => handleLogout;

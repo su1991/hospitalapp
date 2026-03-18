@@ -65,7 +65,16 @@ class profiles
 
 
 
+  Future<Map<String, dynamic>?> loadDoctorById(String doctorId) async {
+    final doc = await FirebaseFirestore.instance
+        .collection("User")
+        .doc(doctorId)
+        .get();
 
+    if (!doc.exists) return null;
+
+    return doc.data();
+  }
 
 
 }

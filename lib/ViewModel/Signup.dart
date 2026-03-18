@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,7 +26,7 @@ class SignupViewModel
     required String rooleType,
 
     required DateTime selectedDate,
-    required DateTime birthdate,  String  ? specialization, String ? Hospital , String ? address
+    required DateTime birthdate,  String  ? specialization, String ? Hospital , String ? address , double? random
   }) async
   {
     try {
@@ -47,16 +48,17 @@ class SignupViewModel
             "phonenumber": phonenumber,
             "genderType": genderType,
             "rooleType": rooleType,
+            "random": Random().nextDouble(),
             "selectedDate": selectedDate,
             "birthdate" : Timestamp.fromDate(birthdate),
             "createdAt": Timestamp.now(),
             if(specialization!=null)
               "specialization": specialization ?? "",
+              "random": Random().nextDouble(),
             if(Hospital!=null)
               "Hospital": Hospital ?? "",
             if(address!=null)
               "address": address ?? "",
-
           }
       );
 

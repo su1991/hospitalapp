@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gfhfg/ViewModel/patientportal.dart';
 import 'package:gfhfg/Views/chatpage.dart';
 import '../ViewModel/appointmentViewModel.dart';
 import '../ViewModel/drscheduleviewmodel.dart';
+import 'Drprofile.dart';
 import 'appointmnetscreenpatient.dart';
 import 'schedulepateint.dart';
 import 'navaigaitonbar.dart';
@@ -28,10 +30,14 @@ class HomePage extends StatefulWidget
    Map<String, dynamic>? nextAppointment;
    bool loading = true;
    var patientname;
+   var doctorname;
+   var specialization;
+   List<Map<String, dynamic>> doctor = [];
    List<Map<String, dynamic>> doctorAppointments = [];
    final drschedule _viewModel1 = drschedule();
 
    final appointmentViewModel _viewModel = appointmentViewModel();
+   final patientportal _viewModel2 = patientportal();
 
 
 
@@ -48,12 +54,29 @@ class HomePage extends StatefulWidget
      });
 
    }
+
+   Future<void> displaydocotrs() async
+   {
+
+
+     var result= await _viewModel2.fetchFeaturedDoctors();
+
+     setState(() {
+       doctor = result;
+       loading = false;
+
+     });
+   }
+
+
+
    @override
    void initState()
    {
    super.initState();
 
    displayname();
+   displaydocotrs();
    }
 
   @override
@@ -153,18 +176,51 @@ class HomePage extends StatefulWidget
                   ),
                 ),
                 const SizedBox(height: 30),
-                const Text("Services", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text("Featured Doctors", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                Row(
-                  children:
-                  [
-                    // Expanded prevents the yellow/black overflow stripes
-                    Expanded(child: _action("Doctors", Icons.people, color: Colors.blue)),
-                    Expanded(child: _action("Chat", Icons.chat, color: Colors.orange)),
-                    Expanded(child: _action("Meds", Icons.medical_services, color: Colors.green)),
-                    Expanded(child: _action("Settings", Icons.settings, color: Colors.red)),
-                  ],
-                ),
+
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: doctor.length,
+                  itemBuilder: (context, index)
+                  {
+
+
+                    final doc = doctor[index];
+
+                    return  Card(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => drprofile(doctorId: doc["id"],)),
+                          );
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.person),
+                            const SizedBox(height: 5),
+                            Text(
+                              doc["name"],
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              doc["specialization"],
+                              style: const TextStyle(fontSize: 10, color: Colors.grey),
+                            ), // Fixed the missing closing parenthesis and bracket here
+                          ],
+                        ),
+                      ),
+                    ) ;
+                  },
+                )
               ],
 
 

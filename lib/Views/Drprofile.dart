@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,8 +8,11 @@ import '../ViewModel/Profiles.dart';
 class drprofile extends StatefulWidget
 
 {
+   final String doctorId;
+   final bool isEditable;
   @override
   State<drprofile> createState() => _drprofile();
+  const drprofile({super.key, required this.doctorId,this.isEditable=false});
 
 
 }
@@ -21,22 +25,28 @@ class drprofile extends StatefulWidget
   final profiles _viewmodel= profiles();
   Map<String, dynamic>? doctorData;
   late final String name ;
+
   late Timestamp ts = doctorData?["birthdate"];
   late DateTime birthdate = ts.toDate();
 
+  late bool isEditable;
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  late final isOwner = currentUserId == widget.doctorId;
 
 
-  Future <void> displaydata()
-  async {
 
 
-final data = await _viewmodel.loadDoctordata();
-if (data.isNotEmpty)
-{
-  setState(() {
-    doctorData = data.first;
-  });
-}
+
+  Future<void> displaydata() async
+  {
+    final data = await _viewmodel.loadDoctorById(widget.doctorId);
+
+    if (data != null)
+    {
+      setState(() {
+        doctorData = data;
+      });
+    }
   }
 
   Future<void> editphoneDialog() async
@@ -165,14 +175,14 @@ if (data.isNotEmpty)
   {
     return
     Scaffold
-      (
+      ( appBar: AppBar(),
         body: SingleChildScrollView(child:  Padding(padding: const EdgeInsets.all(16),
           child: Column
             (
             children:
-              [Row( children: [ Text("Name :  "),  Text( doctorData?["name"] ?? "Loading..." ), Text ("      "),ElevatedButton.icon(onPressed: editnameDialog, label: Icon(Icons.edit)) ],),
+              [Row( children: [ Text("Name :  "),  Text( doctorData?["name"] ?? "Loading..." ), Text ("      "),if(isOwner)  ElevatedButton.icon(onPressed: editnameDialog, label: Icon(Icons.edit))],),
                 SizedBox(height: 20),
-                Row (children: [ Text("Phone : "), Text(doctorData?["phonenumber"] ?? "Loading..."), Text ("      "), ElevatedButton.icon(onPressed: editphoneDialog, label: Icon(Icons.edit))]),
+                Row (children: [ Text("Phone : "), Text(doctorData?["phonenumber"] ?? "Loading..."), Text ("      "), if(isOwner) ElevatedButton.icon(onPressed: editphoneDialog, label: Icon(Icons.edit))]),
                 SizedBox(height: 20),
                 Row ( children: [ Text("Email : "), Text(doctorData?["email"] ?? "Loading..."), Text ("      ")]),
                 SizedBox(height: 20),

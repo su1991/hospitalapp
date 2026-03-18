@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'loginview.dart';
 import '../ViewModel/login.dart';
 import 'patientmainscreen.dart';
+import 'Drprofile.dart';
 import 'schedulepateint.dart';// Import your separate files
 // import 'schedule_page.dart';
 
