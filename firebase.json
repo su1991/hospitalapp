@@ -1,1 +1,42 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"medical-12bec","appId":"1:940718977696:android:2589f04f6b882d72ddcfc5","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"medical-12bec","configurations":{"android":"1:940718977696:android:2589f04f6b882d72ddcfc5","ios":"1:940718977696:ios:8f3d8e67917027d0ddcfc5","macos":"1:940718977696:ios:8f3d8e67917027d0ddcfc5","web":"1:940718977696:web:8c0527d6e037d39addcfc5","windows":"1:940718977696:web:b32f76f2efe59bc1ddcfc5"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "medical-12bec",
+          "appId": "1:940718977696:android:2589f04f6b882d72ddcfc5",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "medical-12bec",
+          "configurations": {
+            "android": "1:940718977696:android:2589f04f6b882d72ddcfc5",
+            "ios": "1:940718977696:ios:8f3d8e67917027d0ddcfc5",
+            "macos": "1:940718977696:ios:8f3d8e67917027d0ddcfc5",
+            "web": "1:940718977696:web:8c0527d6e037d39addcfc5",
+            "windows": "1:940718977696:web:b32f76f2efe59bc1ddcfc5"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 
@@ -85,6 +86,18 @@ class SignupViewModel
         await _firestore.collection("hospitals").add({
           "name": Hospital
         });
+      }
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        String? token = await FirebaseMessaging.instance.getToken();
+
+        await FirebaseFirestore.instance
+            .collection("User")
+            .doc(user.uid)
+            .set({
+          "fcmToken": token,
+        }, SetOptions(merge: true)); // VERY IMPORTANT
       }
 
 
@@ -269,6 +282,20 @@ class SignupViewModel
         "name": Hospital
       });
     }
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      String? token = await FirebaseMessaging.instance.getToken();
+
+      await FirebaseFirestore.instance
+          .collection("User")
+          .doc(user.uid)
+          .set({
+        "fcmToken": token,
+      }, SetOptions(merge: true)); // VERY IMPORTANT
+    }
+
   }
 
 

@@ -5,16 +5,19 @@ import 'package:gfhfg/Views/signupview.dart';
 import 'package:gfhfg/signupview.dart';
 import 'package:gfhfg/Views/patientmainscreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'Views/loginview.dart';
 import 'Views/navaigaitonbar.dart';
 import 'Views/navigationdoctor.dart';
+import 'package:gfhfg/ViewModel/notifications_service.dart';
 
 Future<void> main() async
 {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotificationService().init();
 
   runApp(const MyApp());
 }
