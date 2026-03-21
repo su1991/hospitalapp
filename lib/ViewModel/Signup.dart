@@ -87,20 +87,6 @@ class SignupViewModel
           "name": Hospital
         });
       }
-      final user = FirebaseAuth.instance.currentUser;
-
-      if (user != null) {
-        String? token = await FirebaseMessaging.instance.getToken();
-
-        await FirebaseFirestore.instance
-            .collection("User")
-            .doc(user.uid)
-            .set({
-          "fcmToken": token,
-        }, SetOptions(merge: true)); // VERY IMPORTANT
-      }
-
-
       // Success
       return null;
     }
@@ -283,18 +269,9 @@ class SignupViewModel
       });
     }
 
-    final user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      String? token = await FirebaseMessaging.instance.getToken();
 
-      await FirebaseFirestore.instance
-          .collection("User")
-          .doc(user.uid)
-          .set({
-        "fcmToken": token,
-      }, SetOptions(merge: true)); // VERY IMPORTANT
-    }
+
 
   }
 

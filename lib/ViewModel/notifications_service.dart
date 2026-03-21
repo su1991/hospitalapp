@@ -50,7 +50,7 @@ class NotificationService
   /// 🔹 Save token in Firestore
   Future<void> _saveTokenToFirestore(String? token) async
   {
-    if (token == null) return;
+
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
