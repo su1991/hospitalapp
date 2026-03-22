@@ -21,8 +21,10 @@ Future<void> main() async
 
   final notificationService = NotificationService();
 
-  FirebaseAuth.instance.authStateChanges().listen((user) async {
-    if (user != null) {
+  FirebaseAuth.instance.authStateChanges().listen((user) async
+  {
+    if (user != null)
+    {
       await notificationService.init();
     }
   });
@@ -113,7 +115,5 @@ class _MyAppState extends State<MyApp>
       ),
     );
   }
-
-
 }
 

@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class NotificationService
 {
@@ -24,11 +26,7 @@ class NotificationService
     await _saveTokenToFirestore(token);
 
     // 4️⃣ Listen for token refresh
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async
-    {
-      print("New Token: $newToken");
-      await _saveTokenToFirestore(newToken);
-    });
+
 
     // 5️⃣ Foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message)
@@ -47,10 +45,44 @@ class NotificationService
     });
   }
 
+
+  static const String backendUrl = "http://192.168.1.5:3000";
+
+  static Future<void> sendAppointmentNotification
+      (
+      {
+    required String ? doctorId,
+    required String ? patientId,
+  }) async
+  {
+    final url = Uri.parse("$backendUrl/appointments");
+
+    final response = await http.post
+      (
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "doctorId": doctorId,
+        "patientId": patientId,
+      }),
+    );
+
+    if (response.statusCode == 200)
+    {
+      print("Notification sent!");
+    } else
+    {
+      print("Failed: ${response.body}");
+    }
+  }
+
+
+
+
+
   /// 🔹 Save token in Firestore
   Future<void> _saveTokenToFirestore(String? token) async
   {
-
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -76,6 +108,11 @@ class NotificationService
         }, SetOptions(merge: true));
       }
     });
+
+
+
+
+
   }
 
 

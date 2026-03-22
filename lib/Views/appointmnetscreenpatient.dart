@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../ViewModel/appointmentViewModel.dart';
+import '../ViewModel/notifications_service.dart';
 
 class Appointments extends StatefulWidget
 {
@@ -125,6 +126,11 @@ class _AppointmentsState extends State<Appointments>
 
      );
 
+     await NotificationService.sendAppointmentNotification(
+       doctorId: selectedDoctorId,
+       patientId: currentUserId,
+     );
+
    }
 
 
@@ -152,6 +158,7 @@ class _AppointmentsState extends State<Appointments>
    String? endTime;
    String? startTime;
    String? selectedCancelSlotId;
+   String ? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
 
    bool loading = false;

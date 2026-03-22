@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'notifications_service.dart';
 class appointmentViewModel
 {
   Future<List<Map<String, dynamic>>> fetchDoctors() async
@@ -99,6 +101,8 @@ class appointmentViewModel
         "createdAt": FieldValue.serverTimestamp(),
       });
     });
+
+
   }
 
 
