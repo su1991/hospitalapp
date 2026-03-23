@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gfhfg/Views/signupview.dart';
 import 'package:gfhfg/signupview.dart';
 import 'package:gfhfg/Views/patientmainscreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 
 import 'Views/loginview.dart';
 import 'Views/navaigaitonbar.dart';
@@ -28,7 +31,19 @@ Future<void> main() async
       await notificationService.init();
     }
   });
-
+  await AwesomeNotifications().initialize(
+    null, // icon for notifications, null uses default app icon
+    [
+      NotificationChannel(
+        channelKey: 'appointments_channel',
+        channelName: 'Appointments',
+        channelDescription: 'Notifications for new appointments',
+        defaultColor: Colors.blue,
+        importance: NotificationImportance.High,
+        channelShowBadge: true,
+      ),
+    ],
+  );
   runApp(const MyApp());
 }
 

@@ -1,9 +1,12 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 
 class NotificationService
 {
@@ -29,11 +32,28 @@ class NotificationService
 
 
     // 5️⃣ Foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message)
-    {
+
+
+
+
+
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("Message received in foreground");
 
+      RemoteNotification? notification = message.notification;
 
+      if (notification != null) {
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: notification.hashCode, // unique id
+            channelKey: 'appointments_channel',
+            title: notification.title,
+            body: notification.body,
+            notificationLayout: NotificationLayout.Default,
+          ),
+        );
+      }
     });
 
     // 6️⃣ When app opened from notification
@@ -46,7 +66,7 @@ class NotificationService
   }
 
 
-  static const String backendUrl = "http://192.168.1.5:3000";
+  static const String backendUrl = "http://10.0.2.2:3000";
 
   static Future<void> sendAppointmentNotification
       (

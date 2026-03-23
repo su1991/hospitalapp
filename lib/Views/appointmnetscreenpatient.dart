@@ -128,7 +128,7 @@ class _AppointmentsState extends State<Appointments>
 
      await NotificationService.sendAppointmentNotification(
        doctorId: selectedDoctorId,
-       patientId: currentUserId,
+       patientId: FirebaseAuth.instance.currentUser?.uid
      );
 
    }
@@ -158,7 +158,7 @@ class _AppointmentsState extends State<Appointments>
    String? endTime;
    String? startTime;
    String? selectedCancelSlotId;
-   String ? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
 
 
    bool loading = false;
