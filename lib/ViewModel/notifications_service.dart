@@ -32,13 +32,8 @@ class NotificationService
 
 
     // 5️⃣ Foreground messages
-
-
-
-
-
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message)
+    {
       print("Message received in foreground");
 
       RemoteNotification? notification = message.notification;
@@ -92,6 +87,32 @@ class NotificationService
       print("Notification sent!");
     } else
     {
+      print("Failed: ${response.body}");
+    }
+  }
+
+  static Future<void> sendChatNotification(
+      {
+    required String ? chatId,
+    required String senderId,
+        required String ? messageid
+  }) async {
+    final url = Uri.parse("$backendUrl/chats");
+
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "chatId": chatId,
+        "senderId": senderId,
+        "messageid" : messageid,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print("Notification sent!");
+    } else {
       print("Failed: ${response.body}");
     }
   }

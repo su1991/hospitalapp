@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gfhfg/ViewModel/chats.dart';
 
 import '../ViewModel/appointmentViewModel.dart';
+import '../ViewModel/notifications_service.dart';
 
 
 
@@ -27,9 +28,11 @@ class _ViewChatPageState extends State<ViewChatPage>
   late var currentUserId = _auth.currentUser!.uid;
   final chat _viewmodel= chat();
   String? chatId;
+  String? messageid;
   bool loading = true;
    late final String othername;
   final appointmentViewModel _viewModel1 = appointmentViewModel();
+  final chat _viewModel2 = chat();
 
 
   // Temporary dummy messages (for UI preview)
@@ -40,30 +43,24 @@ class _ViewChatPageState extends State<ViewChatPage>
     if (messageController.text.trim().isEmpty ||
       chatId == null) return;
 
-    final send = await _viewmodel.sendMessage(chatId!, messageController.text.trim(),
-      messageController.clear());
+
+    final messageid = await _viewmodel.sendMessage(chatId!, messageController.text.trim(), messageController.clear());
 
       scrollController.animateTo(
       scrollController.position.maxScrollExtent + 100,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
-
-
-    );
+      );
     setState(()
     {
-
-
-
     });
+    await NotificationService.sendChatNotification(
+      chatId: chatId,
+      senderId: FirebaseAuth.instance.currentUser!.uid,
+      messageid: messageid ,
+    );
 
   }
-
-
-
-
-
-
   Future<void> displayname() async
   {
 
@@ -237,7 +234,7 @@ class _ViewChatPageState extends State<ViewChatPage>
                   backgroundColor: Colors.blue,
                   child: IconButton(
                     icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: send,
+                    onPressed: send
                   ),
                 ),
               ],

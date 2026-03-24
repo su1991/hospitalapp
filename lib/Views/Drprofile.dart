@@ -175,7 +175,7 @@ class drprofile extends StatefulWidget
   {
     return
     Scaffold
-      ( appBar: AppBar(),
+      ( appBar: AppBar(backgroundColor: Color(0xFFA1C5CB),),
         body: SingleChildScrollView(child:  Padding(padding: const EdgeInsets.all(16),
           child: Column
             (

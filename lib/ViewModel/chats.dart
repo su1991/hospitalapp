@@ -44,7 +44,7 @@ class chat
   }
 
   // ✅ Send message
-  Future<void> sendMessage
+  Future<String> sendMessage
       (String chatId, String text,void clear) async
   {
 
@@ -59,7 +59,7 @@ class chat
       "senderId": currentUserId,
       "text": text,
       "timestamp": Timestamp.now(),
-          "messageid" : messageRef.id,
+
     });
 
     // Update last message in chat document
@@ -70,6 +70,8 @@ class chat
       "lastMessage": text,
       "lastMessageTime": Timestamp.now(),
     });
+return messageRef.id;
+
   }
 
   // ✅ Stream messages (REAL TIME)
