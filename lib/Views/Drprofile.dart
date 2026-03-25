@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../ViewModel/Profiles.dart';
 
 class drprofile extends StatefulWidget
@@ -195,9 +195,24 @@ class drprofile extends StatefulWidget
                 SizedBox(height: 20),
                 Row (children: [Text ("Hospital :"),Text(doctorData?["Hospital"] ?? "Loading..."), Text("  ")]),
                 SizedBox(height: 20),
-                Row (children: [Text ("address :"),Text(doctorData?["address"] ?? "Loading..."), Text("  ")])
-
-
+                Row(
+                  children: [
+                    Text("address :"),
+                    InkWell(
+                      onTap: () {
+                        final address = doctorData?["address"];
+                        if (address != null) {
+                          final uri = Uri.parse(address);
+                          launchUrl(uri);
+                        }
+                      },
+                      child: Text(
+                        doctorData?["address"] ?? "Loading...",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                )
               ],
           ),
         )
