@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gfhfg/ViewModel/patientportal.dart';
 import 'package:gfhfg/Views/chatpage.dart';
@@ -8,6 +9,7 @@ import 'appointmnetscreenpatient.dart';
 import 'schedulepateint.dart';
 import 'navaigaitonbar.dart';
 import 'package:gfhfg/Views/chatpage.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget
 {
@@ -111,18 +113,14 @@ class HomePage extends StatefulWidget
                   ],
                 ),
                 const SizedBox(height: 20),
-                StreamBuilder<Map<String, dynamic>?>
-                  (
+                StreamBuilder<Map<String, dynamic>?>(
                   stream: _viewModel.loadNextAppointment(),
-                  builder: (context, snapshot)
-                  {
+                  builder: (context, snapshot) {
                     final appointment = snapshot.data;
-                    print(snapshot.data);
 
                     return Card(
                       elevation: 2,
-                      shape: RoundedRectangleBorder
-                        (
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: ListTile(
@@ -130,18 +128,35 @@ class HomePage extends StatefulWidget
                         title: const Text("Next Appointment"),
                         subtitle: snapshot.connectionState == ConnectionState.waiting
                             ? const Text("Loading...")
-                            : !snapshot.hasData || snapshot.data == null
+                            : appointment == null
                             ? const Text("No upcoming appointments")
-                            : Text(
-                          "${snapshot.data!["doctorName"]}\n"
-                              "${snapshot.data!["day"]} | "
-                              "${snapshot.data!["startTime"]}:00 - "
-                              "${snapshot.data!["endTime"]}:00",
-                        ),
+                            : Builder(
+                          builder: (context) {
+                            // 🔹 Parse the day
+                            DateTime? date;
+                            if (appointment["day"] is Timestamp) {
+                              date = (appointment["day"] as Timestamp).toDate();
+                            } else if (appointment["day"] is String) {
+                              try {
+                                date = DateTime.parse(appointment["day"]);
+                              } catch (e) {
+                                date = null;
+                              }
+                            }
 
-                        trailing: ElevatedButton.icon(
-                          onPressed: appointment != null
-                              ? () {
+                            final formattedDate = date != null
+                                ? DateFormat('EEE, MMM d').format(date)
+                                : appointment["day"].toString();
+
+                            return Text(
+                              "${appointment["doctorName"]}\n"
+                                  "$formattedDate | ${appointment["startTime"]}:00 - ${appointment["endTime"]}:00",
+                            );
+                          },
+                        ),
+                        trailing: appointment != null
+                            ? ElevatedButton.icon(
+                          onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -150,11 +165,11 @@ class HomePage extends StatefulWidget
                                 ),
                               ),
                             );
-                          }
-                              : null, // disables button if no appointment
+                          },
                           icon: const Icon(Icons.chat),
                           label: const Text("Chat"),
-                        ),
+                        )
+                            : null,
                       ),
                     );
                   },
