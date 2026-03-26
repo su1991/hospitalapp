@@ -349,7 +349,8 @@ Text('Choose Gender please',style: TextStyle(fontSize: 20,fontWeight: FontWeight
               selectedDate: selectedDate,
               onDateChanged: (date)
               {
-                setState(() {
+                setState(()
+                {
                   selectedDate = date;
                 });
               },

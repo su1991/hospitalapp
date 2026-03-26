@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../ViewModel/appointmentViewModel.dart';
 import '../ViewModel/notifications_service.dart';
+import 'package:intl/intl.dart';
 
 class Appointments extends StatefulWidget
 {
@@ -76,6 +77,7 @@ class _AppointmentsState extends State<Appointments>
   List <Map <String,dynamic>> slots=[];
    List<Map<String, dynamic>> special = [];
    List<Map<String, dynamic>> hospital = [];
+
 
 
    Future<void> loadDoctors() async
@@ -390,51 +392,62 @@ class _AppointmentsState extends State<Appointments>
 
             const SizedBox(height: 30),
 
-        DropdownButtonFormField<String>
-          (
-          value: selectedSlotId,
+           DropdownButtonFormField<String>
+             (
+             value: selectedSlotId,
+             hint: const Text("Choose a slot"),
+             items: slots.map((slot)
+             {
+               // 🔹 Determine the date
+               DateTime? date;
+               if (slot["day"] is Timestamp)
+               {
+                 date = (slot["day"] as Timestamp).toDate();
+               } else if (slot["day"] is String)
+               {
+                 try
+                 {
+                   date = DateTime.parse(slot["day"]);
+                 } catch (e)
+                 {
+                   date = null;
+                 }
+               }
 
-          hint: const Text("Choose a slot"),
+               // 🔹 Format date nicely
+               final String formattedDate = date != null
+                   ? DateFormat('EEE, MMM d').format(date)
+                   : slot["day"].toString(); // fallback
 
-          items: slots.map((slot)
-          { final bool isbooked= slot["isBooked"]== true;
+               final bool isBooked = slot["isBooked"] == true;
 
-            return DropdownMenuItem<String>(
-              value: slot["id"] , // disable selection
-              enabled: !isbooked,                  // prevents tapping
-
-              child: Text(
-                  "${slot["day"]} | ${slot["startTime"]}:00 - ${slot["endTime"]}:00"
-                      "${isbooked ? " (Booked)" : ""}",
-                style: TextStyle(
-                  color: isbooked ? Colors.grey : Colors.black,
-              ),
-
-            ));
-          }).toList(),
-
-          onChanged: (value)
-          {
-            setState(()
-            {
-              selectedSlotId = value;
-            });
-          },
-
-          decoration: InputDecoration
-            (
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-          ),
-        )
-        , SizedBox(height: 30,),
-
-
-
+               return DropdownMenuItem<String>(
+                 value: slot["id"],
+                 enabled: !isBooked,
+                 child: Text(
+                   "$formattedDate | ${slot["startTime"]}:00 - ${slot["endTime"]}:00"
+                       "${isBooked ? " (Booked)" : ""}",
+                   style: TextStyle(
+                     color: isBooked ? Colors.grey : Colors.black,
+                   ),
+                 ),
+               );
+             }).toList(),
+             onChanged: (value) {
+               setState(() {
+                 selectedSlotId = value;
+               });
+             },
+             decoration: InputDecoration(
+               filled: true,
+               fillColor: Colors.white,
+               border: OutlineInputBorder(
+                 borderRadius: BorderRadius.circular(12),
+                 borderSide: BorderSide.none,
+               ),
+             ),
+           ),
+         SizedBox(height: 30,),
 
             // 🔹 Continue button
             SizedBox(
@@ -444,10 +457,7 @@ class _AppointmentsState extends State<Appointments>
               child: ElevatedButton
                 (
                 onPressed: (
-                    selectedDoctorId == null
-                    ||
-                    selectedSlotId == null
-                    )
+                    selectedDoctorId == null || selectedSlotId == null)
                     ? null
                     : () async
                 {
@@ -468,9 +478,6 @@ class _AppointmentsState extends State<Appointments>
                   );
                 }
                 },
-
-
-
                 child: Text("Book Appointment"),
 
               ),
@@ -483,69 +490,85 @@ class _AppointmentsState extends State<Appointments>
           StreamBuilder<List<Map<String, dynamic>>>
             (
               stream: _viewModel.fetchSavedAppointments(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+              builder: (context, snapshot)
+              {
+                if (!snapshot.hasData)
+                {
                   return const CircularProgressIndicator();
                 }
 
                 final savedslots = snapshot.data!;
 
 
-                return DropdownButtonFormField<String>
-                  (
+               return DropdownButtonFormField<String>(
                   value: selectedCancelSlotId,
                   hint: const Text("Cancel a slot"),
                   items: savedslots.map((slot) {
+                    // 🔹 Convert slot["day"] to DateTime
+                    DateTime? date;
+                    if (slot["day"] is Timestamp) {
+                      date = (slot["day"] as Timestamp).toDate();
+                    } else if (slot["day"] is String) {
+                      try {
+                        date = DateTime.parse(slot["day"]);
+                      } catch (e) {
+                        date = null;
+                      }
+                    }
+
+                    // 🔹 Format date for display
+                    final String formattedDate = date != null
+                        ? DateFormat('EEE, MMM d').format(date) // Thu, Mar 26
+                        : slot["day"].toString(); // fallback if parsing fails
+
                     return DropdownMenuItem<String>(
                       value: slot["appointmentId"],
                       child: Text(
-                          "${slot["day"]} | ${slot["startTime"]}:00 - ${slot["endTime"]}:00 ${slot["doctorName"]}" ),
+                        "$formattedDate | ${slot["startTime"]}:00 - ${slot["endTime"]}:00 ${slot["doctorName"]}",
+                      ),
                     );
                   }).toList(),
                   onChanged: (value) async {
-                    if (value != null) {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (context) =>
-                            AlertDialog(
-                              title: const Text("Confirm Cancellation"),
-                              content: const Text(
-                                  "Are you sure you want to cancel this appointment?"),
-                              actions: [
-                                TextButton(onPressed: () =>
-                                    Navigator.pop(context, false),
-                                    child: const Text("No")),
-                                TextButton(onPressed: () =>
-                                    Navigator.pop(context, true),
-                                    child: const Text("Yes")),
-                              ],
-                            ),
-                      );
+                    if (value == null) return;
 
-                      if (confirm == true) {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Confirm Cancellation"),
+                        content: const Text("Are you sure you want to cancel this appointment?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text("No"),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text("Yes"),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true) {
+                      setState(() {
+                        selectedCancelSlotId = value;
+                      });
+
+                      try {
+                        await _viewModel.cancelAppointment(value);
+
                         setState(() {
-                          selectedCancelSlotId = value;
+                          savedslots.removeWhere((slot) => slot["appointmentId"] == value);
+                          selectedCancelSlotId = null;
                         });
 
-                        try {
-                          await _viewModel.cancelAppointment(value);
-
-                          setState(() {
-                            savedslots.removeWhere((slot) =>
-                            slot["appointmentId"] == value);
-                            selectedCancelSlotId = null;
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text(
-                                "Appointment canceled successfully")),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(
-                                "Failed to cancel appointment: $e")),
-                          );
-                        }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Appointment canceled successfully")),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Failed to cancel appointment: $e")),
+                        );
                       }
                     }
                   },
@@ -558,7 +581,10 @@ class _AppointmentsState extends State<Appointments>
                     ),
                   ),
                 );
-              })],
+              }
+              )
+
+          ],
         ),
       ),
     ) );

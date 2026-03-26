@@ -7,8 +7,9 @@ class Drtimeviewmodel
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String?> addAvailability({
-    required String day,
+  Future<String?> addAvailability(
+      {
+    required DateTime day,
     required String startTime,
     required String endTime,
   }) async {

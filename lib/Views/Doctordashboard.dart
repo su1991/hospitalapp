@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gfhfg/Views/navigationdoctor.dart';
 import '../ViewModel/Drtimeviewmodel.dart';
 import '../ViewModel/appointmentViewModel.dart';
 import 'schedulepateint.dart';
@@ -18,6 +19,56 @@ class Homedoc extends StatefulWidget
 
   @override
   State<Homedoc> createState()=> _HomedocState();
+}
+class DatePickerExample extends StatefulWidget
+{ final DateTime? selectedDate;
+final Function(DateTime) onDateChanged;
+const DatePickerExample({super.key,required this.selectedDate,
+required this.onDateChanged,});
+
+@override
+State<DatePickerExample> createState() => _DatePickerExampleState();
+}
+
+class _DatePickerExampleState extends State<DatePickerExample>
+{
+
+  Future<void> _selectDate() async
+  {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: widget.selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2026),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null)
+    {
+      widget.onDateChanged(pickedDate);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context)
+  {
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+
+        Text(
+          widget.selectedDate != null
+              ? '${widget.selectedDate!.day}/${widget.selectedDate!.month}/${widget.selectedDate!.year}'
+              : 'No date selected',
+        ),
+
+        OutlinedButton(
+          onPressed: _selectDate,
+          child: const Text('Select Date'),
+        ),
+      ],
+    );
+  }
 }
 
 class _HomedocState extends State<Homedoc>
@@ -47,15 +98,15 @@ class _HomedocState extends State<Homedoc>
     displayname();
   }
 
+
+
+
   @override
   Widget build(BuildContext context)
   {
 
     return Scaffold
       (
-
-
-
       body: SafeArea
         (
         child: SingleChildScrollView
@@ -81,13 +132,12 @@ class _HomedocState extends State<Homedoc>
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  height: 50,
-
+                  height: 10,
                 ),
-                const SizedBox(height: 30),
+
                 const Text("Quick Actions", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 Row(
@@ -99,9 +149,16 @@ class _HomedocState extends State<Homedoc>
                       opendialogavailability(context);
 
                     })),
-                    Expanded(child: _action("View Schedule", Icons.schedule, color: Colors.orange, onPressed: () {  })),
-                    Expanded(child: _action("Message", Icons.message, color: Colors.green, onPressed: () {  })),
-                    Expanded(child: _action("patient records", Icons.receipt, color: Colors.red, onPressed: () {  })),
+                    Expanded(child: _action("View Schedule", Icons.schedule, color: Colors.orange, onPressed: () {Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Scaffold(
+                          appBar: AppBar(title: Text("Schedule")),
+                          body: Schedule(),
+                        ),
+                      ),
+                    );})),
+
                   ],
                 ),
               ],
@@ -113,14 +170,13 @@ class _HomedocState extends State<Homedoc>
         ),
 
       ),
-
-
     );
   }
 
   Widget _action(String text, IconData icon, {required Color color, required VoidCallback onPressed})
   {
-    return GestureDetector(
+    return GestureDetector
+      (
         onTap: onPressed,
        child : Column(
       children: [
@@ -142,10 +198,11 @@ class _HomedocState extends State<Homedoc>
   {
    final StarttimeController=TextEditingController();
    final EndtimeController=TextEditingController();
-   final DayController=TextEditingController();
+   DateTime? selectedDate;
 
 
-    showDialog<String>(
+    showDialog<String>
+      (
         context: context,
         builder: (BuildContext context) => Dialog
           (
@@ -169,20 +226,29 @@ class _HomedocState extends State<Homedoc>
             TextField(
               decoration: InputDecoration(hintText: "Enter end time"), controller: EndtimeController,
             ),
-
+TextField(decoration: InputDecoration(hintText: "Enter day"),),
             SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(hintText: "Enter day"), controller: DayController,
-            ),
+                DatePickerExample
+                  (
+                  selectedDate: selectedDate,
+                  onDateChanged: (date)
+                  {
+                    setState(()
+                    {
+                      selectedDate = date;
+                    });
+                  },
+                ),
             SizedBox(height: 10),
 
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () async
+                  {
 
                     final Drtimeviewmodel viewModel = Drtimeviewmodel();
 
                     String? result = await viewModel.addAvailability(
-                      day: DayController.text.trim(),
+                      day: selectedDate!,
                       startTime: StarttimeController.text.trim(),
                       endTime: EndtimeController.text.trim(),
                     );
@@ -208,7 +274,6 @@ class _HomedocState extends State<Homedoc>
       ),
     ),
     );
-
 
   }
 
