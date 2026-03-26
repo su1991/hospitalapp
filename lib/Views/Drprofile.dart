@@ -219,19 +219,6 @@ class drprofile extends StatefulWidget
         )
     );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  }
 
 }

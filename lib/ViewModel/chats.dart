@@ -83,13 +83,14 @@ return messageRef.id;
         .collection("messages")
         .orderBy("timestamp", descending: false)
         .snapshots()
-        .map((snapshot)
-    {
-      return snapshot.docs
-
-          .map((doc) => doc.data())
-          .toList();
-
+        .map((snapshot) {
+      return snapshot.docs.map((doc)
+      {
+        return {
+          ...doc.data(),
+          "messageid": doc.id, // ✅ ADD THIS
+        };
+      }).toList();
     });
   }
 
@@ -109,13 +110,13 @@ return messageRef.id;
 
 
   Future<void> deleteMessage
-      (String chatId, String messageId) async
+      (String chatId, String messageid) async
   {
     await _firestore
         .collection("chats")
         .doc(chatId)
         .collection("messages")
-        .doc(messageId)
+        .doc(messageid)
         .delete();
   }
 

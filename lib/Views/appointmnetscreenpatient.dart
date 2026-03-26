@@ -477,6 +477,9 @@ class _AppointmentsState extends State<Appointments>
             ),
 
             SizedBox(height: 40,),
+
+            Text("Payments are paid offline , no online payments are available for now",style: TextStyle(fontWeight: FontWeight.bold) ,),
+            SizedBox(height: 40,),
           StreamBuilder<List<Map<String, dynamic>>>
             (
               stream: _viewModel.fetchSavedAppointments(),

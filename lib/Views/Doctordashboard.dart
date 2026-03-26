@@ -80,32 +80,7 @@ class _HomedocState extends State<Homedoc>
                     ),
                   ],
                 ),
-                Text("Today appointments",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  child: const ListTile
-                    (
-                    leading: Icon(Icons.calendar_month, color: Colors.blue),
-                    title: Text("Next Appointment"),
-                    subtitle: Row( children: [Text("Feb 10, 3:00 PM"),
-                      SizedBox(width: 10),
-                      
-                      Text("Status:")
 
-                        ]
-
-
-                    )
-
-
-
-                  ),
-
-
-
-                ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,

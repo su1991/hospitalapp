@@ -85,8 +85,7 @@ class _ViewChatPageState extends State<ViewChatPage>
 
   Future<void> initChat() async
   {
-    final id =
-    await _viewmodel.createOrGetChat(widget.otherUserId);
+    final id = await _viewmodel.createOrGetChat(widget.otherUserId);
 
     setState(()
     {
@@ -147,7 +146,8 @@ class _ViewChatPageState extends State<ViewChatPage>
     final message = messages[messages.length -1 - index]; //so that it displays the latest message at the bottom
     final isMe = message["senderId"] == _viewmodel.currentUserId;
 
-   return  GestureDetector(
+   return  GestureDetector
+     (
         onLongPress: ()
         {
           if (message["senderId"] == currentUserId)
@@ -156,12 +156,7 @@ class _ViewChatPageState extends State<ViewChatPage>
           }
 
         },
-
-
-
-
-
-    child : Align(alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+       child : Align(alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
     child: Container(
     margin:
     const EdgeInsets.symmetric(vertical: 5),
