@@ -53,8 +53,7 @@ class _navigationbar extends State<navigation>
     }
     ),
     Schedule(),
-    const Center(child: Text("Report")),
-    const Center(child: Text("Notifications")),
+
   ];
   VoidCallback? get handleslogut => handleLogout;
 
@@ -105,8 +104,7 @@ class _navigationbar extends State<navigation>
         [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.calendar_month), label: 'Schedule'),
-          NavigationDestination(icon: Icon(Icons.assignment), label: 'Report'),
-          NavigationDestination(icon: Icon(Icons.notifications), label: 'notifications'),
+
         ],
 
       ),

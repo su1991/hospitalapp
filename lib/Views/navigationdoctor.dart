@@ -63,7 +63,7 @@ class _navigationbar extends State<navigationdr>
     Schedule(),
 
   HomePage(onSchedulePressed: () {  },),
-    const Center(child: Text("Notification")),
+
     drprofile(doctorId: currentUserId,)
   ];
 
@@ -109,7 +109,7 @@ class _navigationbar extends State<navigationdr>
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.calendar_month), label: 'Schedule'),
           NavigationDestination(icon: Icon(Icons.people), label: 'patient Mode'),
-          NavigationDestination(icon: Icon(Icons.notifications), label: 'notification'),
+
           NavigationDestination(icon: Icon(Icons.person), label: 'profile'),
         ],
 
