@@ -226,7 +226,7 @@ class _HomedocState extends State<Homedoc>
             TextField(
               decoration: InputDecoration(hintText: "Enter end time"), controller: EndtimeController,
             ),
-TextField(decoration: InputDecoration(hintText: "Enter day"),),
+
             SizedBox(height: 10),
                 DatePickerExample
                   (

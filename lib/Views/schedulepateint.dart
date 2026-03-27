@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gfhfg/ViewModel/drscheduleviewmodel.dart';
 import 'package:gfhfg/Views/chatpage.dart';
 import 'dart:math' as math;
 import 'loginview.dart';
+import 'package:intl/intl.dart';
 
 
 
@@ -99,13 +101,35 @@ void openchat()
 
                   // Welcome Card
                   return Card(
+
                     color: getColor(),
                     child: ListTile(
                       title: Text(appointment["patientName"]),
-                      subtitle: Text(
-                        "${appointment["day"]} | "
-                            "${appointment["startTime"]}:00 - "
-                            "${appointment["endTime"]}:00",
+                      subtitle:   Builder(
+                        builder: (context) {
+                          // 🔹 Parse the day
+                          DateTime? date;
+                          if (appointment["day"] is Timestamp) {
+                            date = (appointment["day"] as Timestamp).toDate();
+                          } else if (appointment["day"] is String) {
+                            try {
+                              date = DateTime.parse(appointment["day"]);
+                            } catch (e) {
+                              date = null;
+                            }
+                          }
+
+                          final formattedDate = date != null
+                              ? DateFormat('EEE, MMM d').format(date)
+                              : appointment["day"].toString();
+
+                          return Text(
+
+                                "$formattedDate | ${appointment["startTime"]}:00 - ${appointment["endTime"]}:00",
+                          );
+                        },
+
+
                       ),
 
                       trailing: ElevatedButton.icon(
