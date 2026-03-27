@@ -174,12 +174,7 @@ class _AppointmentsState extends State<Appointments>
   void initState()
   {
     super.initState();
-
     loadhospital();
-
-
-
-
   }
   @override
   Widget build(BuildContext context)
@@ -265,9 +260,7 @@ class _AppointmentsState extends State<Appointments>
                   loading = true;
                 });
       await loadspecialization();
-
-
-              },
+      },
 
               decoration: InputDecoration(
                 filled: true,
@@ -313,8 +306,11 @@ class _AppointmentsState extends State<Appointments>
                 if (value == null) return;
 
                 setState(()
-                {
+                { doctors = [];
+                  slots = [];
+
                   selectedSpecializationId = value;
+                  selectedDoctorId=null;
                   loading = true;
                 });
 
