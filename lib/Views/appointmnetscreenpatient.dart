@@ -431,6 +431,7 @@ class _AppointmentsState extends State<Appointments>
              }).toList(),
              onChanged: (value) {
                setState(() {
+                 slots = [];
                  selectedSlotId = value;
                });
              },
