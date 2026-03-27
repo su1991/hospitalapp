@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gfhfg/ViewModel/doctorhome.dart';
 import 'package:gfhfg/Views/navigationdoctor.dart';
 import '../ViewModel/Drtimeviewmodel.dart';
 import '../ViewModel/appointmentViewModel.dart';
 import 'schedulepateint.dart';
 import 'navaigaitonbar.dart';
+import 'package:intl/intl.dart';
 
 
 class Homedoc extends StatefulWidget
@@ -37,9 +40,9 @@ class _DatePickerExampleState extends State<DatePickerExample>
   {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: widget.selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2026),
-      lastDate: DateTime.now(),
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
     );
 
     if (pickedDate != null)
@@ -47,6 +50,7 @@ class _DatePickerExampleState extends State<DatePickerExample>
       widget.onDateChanged(pickedDate);
     }
   }
+
 
   @override
   Widget build(BuildContext context)
@@ -74,8 +78,24 @@ class _DatePickerExampleState extends State<DatePickerExample>
 class _HomedocState extends State<Homedoc>
 {
   var drname;
+  var result;
   bool loading=true;
+  List<Map<String, dynamic>> TodaydoctorAppointments = [];
   final appointmentViewModel _viewModel = appointmentViewModel();
+  final doctorhome _viewModel1 = doctorhome();
+
+  Future<void> displaytoday() async
+  {
+
+    final result = await _viewModel1.fetchtoday();
+
+    setState(()
+    {
+      TodaydoctorAppointments = result;
+      loading = false;
+    });
+
+  }
 
   Future<void> displayname() async
   {
@@ -85,22 +105,18 @@ class _HomedocState extends State<Homedoc>
     {
       drname = name;
       loading = false;
-    })
-    ;
+    });
 
   }
+
 
   @override
   void initState()
   {
     super.initState();
-
     displayname();
+    displaytoday();
   }
-
-
-
-
   @override
   Widget build(BuildContext context)
   {
@@ -161,16 +177,58 @@ class _HomedocState extends State<Homedoc>
 
                   ],
                 ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  "Today's Appointments",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+
+                const SizedBox(height: 10),
+
+                TodaydoctorAppointments.isEmpty
+                    ? const Text("No appointments today")
+                    : ListView.builder
+                  (
+                  shrinkWrap: true, // ✅ important inside scroll
+                  physics: const NeverScrollableScrollPhysics(), // ✅ prevent nested scroll
+                  itemCount: TodaydoctorAppointments.length,
+                  itemBuilder: (context, index) {
+                    final appointment = TodaydoctorAppointments[index];
+
+                    // 🔹 Convert date
+                    DateTime? date;
+                    if (appointment["day"] is Timestamp) {
+                      date = (appointment["day"] as Timestamp).toDate();
+                    }
+
+                    final formattedDate = date != null
+                        ? DateFormat('EEE, MMM d').format(date)
+                        : appointment["day"].toString();
+
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        leading: const Icon(Icons.person, color: Colors.blue),
+                        title: Text(appointment["patientName"]),
+                        subtitle: Text(
+                          "$formattedDate\n${appointment["startTime"]}:00 - ${appointment["endTime"]}:00",
+                        ),
+
+                      ),
+                    );
+                  },
+                ),
               ],
-
-
             ),
           ),
+        )
+      )
+            );
 
-        ),
 
-      ),
-    );
+
   }
 
   Widget _action(String text, IconData icon, {required Color color, required VoidCallback onPressed})

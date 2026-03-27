@@ -75,6 +75,7 @@ class appointmentViewModel
     required String slotId,
   }) async {
 
+
     final firestore = FirebaseFirestore.instance;
 
     await firestore.runTransaction((transaction) async
@@ -89,6 +90,9 @@ class appointmentViewModel
       if (existing.docs.isNotEmpty) {
         throw Exception("Slot already booked");
       }
+      final slotRef = firestore.collection("slots").doc(slotId);
+      final slotSnap = await transaction.get(slotRef);
+      final slotData = slotSnap.data()!;
 
       // 2️⃣ Create appointment
       final newAppointmentRef =
@@ -99,6 +103,11 @@ class appointmentViewModel
         "patientId": patientId,
         "slotId": slotId,
         "createdAt": FieldValue.serverTimestamp(),
+        "day": slotData["day"],
+        "startTime": slotData["startTime"],
+        "endTime": slotData["endTime"],
+
+
       });
     });
 
@@ -261,6 +270,7 @@ class appointmentViewModel
       return []; // ✅ REQUIRED
     }
   }
+
 
 
 

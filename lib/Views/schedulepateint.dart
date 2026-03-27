@@ -81,12 +81,9 @@ void openchat()
   @override
   Widget build(BuildContext context)
   {
-
     return
          Scaffold(
-
-
-            body:  Padding(padding: const EdgeInsets.all(16),
+           body:  Padding(padding: const EdgeInsets.all(16),
             child: Column
               (
               children: [
@@ -97,9 +94,6 @@ void openchat()
                 itemBuilder: (context, index)
                 {
                   final appointment = doctorAppointments[index];
-
-
-                  // Welcome Card
                   return Card(
 
                     color: getColor(),
@@ -109,12 +103,16 @@ void openchat()
                         builder: (context) {
                           // 🔹 Parse the day
                           DateTime? date;
-                          if (appointment["day"] is Timestamp) {
+                          if (appointment["day"] is Timestamp)
+                          {
                             date = (appointment["day"] as Timestamp).toDate();
-                          } else if (appointment["day"] is String) {
+                          } else if (appointment["day"] is String)
+                          {
                             try {
+
                               date = DateTime.parse(appointment["day"]);
-                            } catch (e) {
+                            } catch (e)
+                            {
                               date = null;
                             }
                           }
