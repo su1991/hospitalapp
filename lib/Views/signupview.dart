@@ -117,7 +117,7 @@ final nameController=TextEditingController();
     return; // Stop signup
   }
 
-  String? addresserror= _viewModel.validateGoogleMapsLink(AddressController.text);
+  String? addresserror= _viewModel.validateGoogleMapsLink(AddressController.text , rooleType!.name);
   if(addresserror != null)
     {
       ScaffoldMessenger.of(context).showSnackBar

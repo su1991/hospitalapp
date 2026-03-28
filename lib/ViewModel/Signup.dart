@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:gfhfg/Views/googleviews.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 
@@ -112,20 +113,21 @@ class SignupViewModel
     return null;
   }
 
-  String? validateGoogleMapsLink(String? link)
-  {
-    if (link == null || link.isEmpty)
-    {
-      return "Google Maps link is required";
-    }
+  String? validateGoogleMapsLink(String? link, String rooleType) {
 
-    // Simple pattern check for Google Maps URLs
-    bool isValid = RegExp(
-        r'^(https:\/\/(www\.google\.com\/maps|maps\.app\.goo\.gl)\/.+)$'
-    ).hasMatch(link);
+    if (rooleType == "Doctor") {
 
-    if (!isValid) {
-      return "Please enter a valid Google Maps link";
+      if (link == null || link.isEmpty) {
+        return "Google Maps link is required";
+      }
+
+      bool isValid = RegExp(
+          r'^(https:\/\/(www\.google\.com\/maps|maps\.app\.goo\.gl)\/.+)$'
+      ).hasMatch(link);
+
+      if (!isValid) {
+        return "Please enter a valid Google Maps link";
+      }
     }
 
     return null;

@@ -88,7 +88,7 @@ class _signupState extends State<googleviews>
       );
 
 
-      String? addresserror= _viewModel.validateGoogleMapsLink(AddressController.text);
+      String? addresserror= _viewModel.validateGoogleMapsLink(AddressController.text , rooleType as String);
       if(addresserror != null)
       {
         ScaffoldMessenger.of(context).showSnackBar
