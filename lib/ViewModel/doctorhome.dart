@@ -42,4 +42,11 @@ class doctorhome
     return todayappointmentsList;
   }
 
+
+
+
+
+
+
+
 }

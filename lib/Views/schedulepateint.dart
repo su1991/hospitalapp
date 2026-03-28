@@ -42,6 +42,7 @@ class Schedule extends StatefulWidget
 
 
     final drschedule _viewModel = drschedule();
+
     bool loading = true;
     List<Map<String, dynamic>> doctorAppointments = [];
 
@@ -52,8 +53,7 @@ class Schedule extends StatefulWidget
       final name = await _viewModel.loadDoctorAppointments();
       setState(()
       {doctorAppointments = name;
-
-      loading = false;
+        loading = false;
       });
 
     }
@@ -61,6 +61,18 @@ void openchat()
 {
 
 }
+
+    Future<void> displaytodaorlaterappointments() async
+    {
+
+      final list = await _viewModel.fetchtodayorlater();
+      setState(() {
+        doctorAppointments = list;
+        loading= false;
+      });
+
+
+    }
 
 
     late Color cardColor;
@@ -70,7 +82,7 @@ void openchat()
   {
     super.initState();
     cardColor = getColor();
-    displaypatientname();
+    displaytodaorlaterappointments();
 
 
     // generate once
@@ -100,7 +112,8 @@ void openchat()
                     child: ListTile(
                       title: Text(appointment["patientName"]),
                       subtitle:   Builder(
-                        builder: (context) {
+                        builder: (context)
+                        {
                           // 🔹 Parse the day
                           DateTime? date;
                           if (appointment["day"] is Timestamp)
