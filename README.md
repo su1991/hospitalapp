@@ -1,17 +1,35 @@
-# gfhfg
+# Medical app
 
-A new Flutter project.
+## Medical Appointment Booking App
 
-## Getting Started
+This project is a mobile application that facilitates appointment booking between patients and doctors.
 
-This project is a starting point for a Flutter application.
+Patients can easily find and book appointments by following a structured selection process:
 
-A few resources to get you started if this is your first Flutter project:
+* Selecting a hospital
+* Choosing a medical specialization
+* Picking a specific doctor
+* Booking an available time slot
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+The system ensures organized scheduling and prevents double booking through real-time slot management.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Key Features
+
+* Role-based access (Patient / Doctor)
+* Hospital and specialization filtering
+* Real-time appointment booking
+* Slot availability management
+* Appointment cancellation
+* Notification system for booking updates
+
+### Tech Stack
+
+* Flutter (UI)
+* Firebase Authentication
+* Cloud Firestore (Database)
+* Firebase Cloud Messaging (Notifications)
+
+### Goal
+
+The goal of this project is to simplify the healthcare booking process and provide an intuitive experience for both patients and doctors.
+
