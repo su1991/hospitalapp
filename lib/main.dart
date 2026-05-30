@@ -83,7 +83,8 @@ class _MyAppState extends State<MyApp>
           scaffoldBackgroundColor: const Color(0xFFA1C5CB),
 
           appBarTheme: const AppBarTheme
-            ( shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all( Radius.circular(30))),
+            (
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.all( Radius.circular(30))),
 
             backgroundColor: Color(0xFF7DA2A8),
           ),navigationBarTheme: const NavigationBarThemeData

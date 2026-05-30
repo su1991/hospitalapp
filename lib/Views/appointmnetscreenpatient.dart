@@ -262,9 +262,10 @@ class _AppointmentsState extends State<Appointments>
       await loadspecialization();
       },
 
-              decoration: InputDecoration(
+              decoration: InputDecoration
+                (
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -320,7 +321,8 @@ class _AppointmentsState extends State<Appointments>
 
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -339,8 +341,7 @@ class _AppointmentsState extends State<Appointments>
 
               items: doctors.map((doctor)
               {
-                final bool isCurrentDoctor =
-                    doctor["id"] == FirebaseAuth.instance.currentUser!.uid;
+                final bool isCurrentDoctor = doctor["id"] == FirebaseAuth.instance.currentUser!.uid;
 
                 return DropdownMenuItem<String>(
 
@@ -349,7 +350,8 @@ class _AppointmentsState extends State<Appointments>
 
                   child: Text(
                     doctor["name"],
-                    style: TextStyle(
+                    style: TextStyle
+                      (
                       color: isCurrentDoctor ? Colors.grey : Colors.black,
                     ),
                   ),
@@ -376,7 +378,7 @@ class _AppointmentsState extends State<Appointments>
               decoration: InputDecoration
                 (
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -437,7 +439,7 @@ class _AppointmentsState extends State<Appointments>
              },
              decoration: InputDecoration(
                filled: true,
-               fillColor: Colors.white,
+               fillColor: Theme.of(context).cardColor,
                border: OutlineInputBorder(
                  borderRadius: BorderRadius.circular(12),
                  borderSide: BorderSide.none,
@@ -571,7 +573,7 @@ class _AppointmentsState extends State<Appointments>
                   },
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).cardColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,

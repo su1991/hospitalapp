@@ -33,7 +33,8 @@ class LoginViewModel
       DocumentSnapshot userDoc =
       await _firestore.collection("User").doc(uid).get();
 
-      if (!userDoc.exists) {
+      if (!userDoc.exists)
+      {
         return "User data not found";
       }
 
